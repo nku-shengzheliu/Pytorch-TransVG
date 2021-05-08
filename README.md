@@ -2,11 +2,14 @@
 
 An unofficial pytorch implementation of ***"TransVG: End-to-End Visual Grounding with Transformers"***.
 
+***paper***: https://arxiv.org/abs/2104.08541 
+
+![avatar](https://github.com/nku-shengzheliu/Pytorch-TransVG/blob/main/pipeline.PNG)
+
 My model is still in training. Due to some implementation details, I do not guarantee that I can reproduce the performance in the paper. My own reproduced model performance table will be updated as soon as I finish the training.
 
 Also, if you have any questions about the code please feel free to ask.
 
-***paper***: https://arxiv.org/abs/2104.08541 
 
 
 ## Prerequisites
