@@ -46,7 +46,7 @@ python train.py --data_root XXX --dataset {dataset_name} --gpu {gpu_id}
 Evaluate our model using the following commands:
 
 ```
- python train.py --data_root XXX --dataset {dataset_name} --gpu {gpu_id}  --test --test_split {test_split}
+ python train.py --data_root XXX --dataset {dataset_name} --gpu {gpu_id}  --test
 ```
 
 
