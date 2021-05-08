@@ -38,7 +38,7 @@ conda activate transvg
 ## Training
 
 
-Train our model using the following commands:
+Train the model using the following commands:
 
 ```
 python train.py --data_root XXX --dataset {dataset_name} --gpu {gpu_id}
@@ -46,7 +46,7 @@ python train.py --data_root XXX --dataset {dataset_name} --gpu {gpu_id}
 
 ## Testing
 
-Evaluate our model using the following commands:
+Evaluate the model using the following commands:
 
 ```
  python train.py --data_root XXX --dataset {dataset_name} --gpu {gpu_id}  --test
@@ -54,6 +54,6 @@ Evaluate our model using the following commands:
 
 ## Acknowledgement
 
-Thanks for the work of [DETR](https://github.com/facebookresearch/detr) and [ReSC](https://github.com/zyang-ur/ReSC). Our code is based on the implementation of them.
+Thanks for the work of [DETR](https://github.com/facebookresearch/detr) and [ReSC](https://github.com/zyang-ur/ReSC). My code is based on the implementation of them.
 
 
