@@ -52,5 +52,8 @@ Evaluate our model using the following commands:
  python train.py --data_root XXX --dataset {dataset_name} --gpu {gpu_id}  --test
 ```
 
+## Acknowledgement
+
+Thanks for the work of [DETR](https://github.com/facebookresearch/detr) and [ReSC](https://github.com/zyang-ur/ReSC). Our code is based on the implementation of them.
 
 
