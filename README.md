@@ -14,10 +14,10 @@ Also, if you have any questions about the code please feel free to ask.
 
 ## Prerequisites
 
-Create the conda environment with the ```environment.yml``` file:
+Create the conda environment with the ```environment.yaml``` file:
 
 ```python
-conda env create -f environment.yml
+conda env create -f environment.yaml
 ```
 
 Activate the environment with:
