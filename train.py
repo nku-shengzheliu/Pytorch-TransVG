@@ -45,14 +45,14 @@ from utils.checkpoint import save_checkpoint, load_pretrain, load_resume
 def main():
     parser = argparse.ArgumentParser(
         description='Dataloader test')
-    parser.add_argument('--gpu', default='0', help='gpu id')
+    parser.add_argument('--gpu', default='0,1', help='gpu id')
     parser.add_argument('--workers', default=8, type=int, help='num workers for data loading')
-    parser.add_argument('--nb_epoch', default=90, type=int, help='training epoch')
-    parser.add_argument('--lr', default=1e-5, type=float, help='learning rate')
+    parser.add_argument('--nb_epoch', default=100, type=int, help='training epoch')
+    parser.add_argument('--lr', default=1e-4, type=float, help='learning rate')
     parser.add_argument('--lr_dec', default=0.1, type=float, help='decline of learning rate')
-    parser.add_argument('--batch_size', default=12, type=int, help='batch size')
+    parser.add_argument('--batch_size', default=24, type=int, help='batch size')
     parser.add_argument('--size', default=640, type=int, help='image size')
-    parser.add_argument('--data_root', type=str, default='/home/ubuntu5/lsz/dataset',
+    parser.add_argument('--data_root', type=str, default='/home/ubuntu6/lsz/dataset',
                         help='path to dataset splits data folder')
     parser.add_argument('--split_root', type=str, default='data',
                         help='location of pre-parsed dataset info')
@@ -60,15 +60,15 @@ def main():
                         help='referit/flickr/unc/unc+/gref')
     parser.add_argument('--time', default=40, type=int,
                         help='maximum time steps (lang length) per batch')
-    # parser.add_argument('--resume', default='saved_models/TranVG_checkpoint.pth.tar', type=str, metavar='PATH',
-    #                     help='path to latest checkpoint (default: none)')
-    parser.add_argument('--resume', default='', type=str, metavar='PATH',
+    parser.add_argument('--resume', default='', type=str, metavar='PATH',  #
                         help='path to latest checkpoint (default: none)')
+    # parser.add_argument('--resume', default='', type=str, metavar='PATH',
+    #                     help='path to latest checkpoint (default: none)')
     parser.add_argument('--pretrain', default='', type=str, metavar='PATH',
                         help='pretrain support load state_dict that are not identical, while have no loss saved as resume')
-    parser.add_argument('--print_freq', '-p', default=20, type=int,
+    parser.add_argument('--print_freq', '-p', default=50, type=int,
                         metavar='N', help='print frequency (default: 1e3)')
-    parser.add_argument('--savename', default='TranVG_5.6', type=str, help='Name head for saved model')
+    parser.add_argument('--savename', default='TransVG_6.3', type=str, help='Name head for saved model')
     parser.add_argument('--seed', default=13, type=int, help='random seed')
     parser.add_argument('--bert_model', default='bert-base-uncased', type=str, help='bert model')
     parser.add_argument('--test', dest='test', default=False, action='store_true', help='test')
@@ -143,7 +143,7 @@ def main():
             std=[0.229, 0.224, 0.225])
     ])
     
-    # TODO: DETR图像的mask（已加）
+    # Dataset
     train_dataset = VGDataset(data_root=args.data_root,
                          split_root=args.split_root,
                          dataset=args.dataset,
@@ -210,7 +210,7 @@ def main():
     ## optimizer
     if args.tunebert:
         optimizer = torch.optim.AdamW([{'params': rest_param},
-                {'params': visu_param},
+                {'params': visu_param, 'lr': args.lr/10.},
                 {'params': text_param, 'lr': args.lr/10.}], lr=args.lr, weight_decay=0.0001)
     else:
         optimizer = torch.optim.AdamW([{'params': rest_param},
@@ -221,7 +221,7 @@ def main():
     if args.test:
         _ = test_epoch(test_loader, model)
     else:
-        for epoch in range(12, args.nb_epoch):
+        for epoch in range(args.nb_epoch):
             ## 60个epoch后lr下降为原来的0.1
             adjust_learning_rate(args, optimizer, epoch)
             
@@ -306,17 +306,18 @@ def train_epoch(train_loader, model, optimizer, epoch):
 
         if batch_idx % args.print_freq == 0:
             print_str = 'Epoch: [{0}][{1}/{2}]\t' \
-                'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t' \
-                'Data Time {data_time.val:.3f} ({data_time.avg:.3f})\t' \
                 'Loss {loss.val:.4f} ({loss.avg:.4f})\t' \
                 'L1_Loss {l1_loss.val:.4f} ({l1_loss.avg:.4f})\t' \
                 'GIoU_Loss {GIoU_loss.val:.4f} ({GIoU_loss.avg:.4f})\t' \
                 'Accu {acc.val:.4f} ({acc.avg:.4f})\t' \
                 'Mean_iu {miou.val:.4f} ({miou.avg:.4f})\t' \
+                'vis_lr {vis_lr:.8f}\t' \
+                'lang_lr {lang_lr:.8f}\t' \
                 .format( \
-                    epoch, batch_idx, len(train_loader), batch_time=batch_time, \
-                    data_time=data_time, loss=losses, l1_loss = l1_losses, \
-                    GIoU_loss = GIoU_losses, miou=miou, acc=acc)
+                    epoch, batch_idx, len(train_loader), \
+                    loss=losses, l1_loss = l1_losses, \
+                    GIoU_loss = GIoU_losses, miou=miou, acc=acc, \
+                    vis_lr = optimizer.param_groups[0]['lr'], lang_lr = optimizer.param_groups[2]['lr'])
             print(print_str)
 
             logging.info(print_str)
