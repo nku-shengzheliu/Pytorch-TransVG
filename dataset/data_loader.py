@@ -168,7 +168,7 @@ class VGDataset(data.Dataset):
 
     def __init__(self, data_root, split_root='data', dataset='referit', imsize=640,
                  transform=None, augment=False, return_idx=False, testmode=False,
-                 split='train', max_query_len=128, lstm=False, bert_model='bert-base-uncased'):
+                 split='train', max_query_len=40, lstm=False, bert_model='bert-base-uncased'):
         self.images = []
         self.data_root = data_root
         self.split_root = split_root  # 'data'
@@ -254,8 +254,9 @@ class VGDataset(data.Dataset):
             augment_flip, augment_hsv, augment_affine = True,True,True
 
         ## seems a bug in torch transformation resize, so separate in advance
-        h,w = img.shape[0], img.shape[1]
-        mask = copy.deepcopy(img)
+        h, w = img.shape[0], img.shape[1]
+        #mask = copy.deepcopy(img)
+        mask = np.zeros_like(img)
         if self.augment:  # True
             ## random horizontal flip
             if augment_flip and random.random() > 0.5:
