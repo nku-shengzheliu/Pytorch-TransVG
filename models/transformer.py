@@ -37,10 +37,10 @@ class Transformer_vis(nn.Module):
 
     def forward(self, src, mask, pos_embed):
         # flatten NxCxHxW to HWxNxC
-        bs, c, h, w = src.shape
-        src = src.flatten(2).permute(2, 0, 1)
-        pos_embed = pos_embed.flatten(2).permute(2, 0, 1)
-        mask = mask.flatten(1)
+        bs, c, h, w = src.shape  # bs, 256, 20, 20
+        src = src.flatten(2).permute(2, 0, 1)  # 400, bs, 256
+        pos_embed = pos_embed.flatten(2).permute(2, 0, 1)  # 400, bs, 256
+        mask = mask.flatten(1)  # bs, 400
 
         memory = self.encoder(src, src_key_padding_mask=mask, pos=pos_embed)
 
@@ -192,7 +192,7 @@ class TransformerEncoderLayer(nn.Module):
                      src_mask: Optional[Tensor] = None,
                      src_key_padding_mask: Optional[Tensor] = None,
                      pos: Optional[Tensor] = None):
-        q = k = self.with_pos_embed(src, pos)  # token特征src和位置特征pos相加作为query和ke
+        q = k = self.with_pos_embed(src, pos)  # token特征src和位置特征pos相加作为query和key
                                                 # value即src不需要加pos TODO：why？
         src2 = self.self_attn(q, k, value=src, attn_mask=src_mask,
                               key_padding_mask=src_key_padding_mask)[0]
