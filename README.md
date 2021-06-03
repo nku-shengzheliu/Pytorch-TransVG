@@ -6,11 +6,16 @@ An unofficial pytorch implementation of ***"TransVG: End-to-End Visual Grounding
 
 <img src="https://github.com/nku-shengzheliu/Pytorch-TransVG/blob/main/pipeline.PNG" width = 60% height = 60% align=center/>
 
-My model is still in training. Due to some implementation details, I do not guarantee that I can reproduce the performance in the paper. My own reproduced model performance table will be updated as soon as I finish the training.
+Due to some implementation details, I do not guarantee that I can reproduce the performance in the paper. 
 
-Also, if you have any questions about the code please feel free to ask.
+If you have any questions about the code please feel free to ask~
 
+## Update record
 
+* 2021.5.10
+  * My model is still in training. My reproduced model performance table will be updated as soon as I finish the training.
+* 2021.6.3
+  * The previously trained model was very slow to converge due to the wrong setting of `image mask` in transformer encoder. I fixed this bug and re-trained now.
 
 ## Prerequisites
 
