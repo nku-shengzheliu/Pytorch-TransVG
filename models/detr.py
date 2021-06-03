@@ -76,29 +76,29 @@ class VLFusion(nn.Module):
         bs, c, h, w = fv.shape
         _, _, l = fl.shape
 
-        pv = self.v_proj(fv.view(bs, c, -1).permute(0,2,1))  # [64,400,256]
-        pl = self.l_proj(fl)  # [64, 40, 256]
-        pv = pv.permute(0,2,1)  # [64,256,400]
-        pl = pl.permute(0,2,1)  # [64,256,40]
+        pv = self.v_proj(fv.view(bs, c, -1).permute(0,2,1))  # [bs,400,256]
+        pl = self.l_proj(fl)  # [bs, 40, 256]
+        pv = pv.permute(0,2,1)  # [bs,256,400]
+        pl = pl.permute(0,2,1)  # [bs,256,40]
 
-        # pv = self.v_proj(fv)  # [64, 256, 20, 20]
-        # pv = pv.view(bs, 256, -1)  # [64, 256, 400]
+        # pv = self.v_proj(fv)  # [bs, 256, 20, 20]
+        # pv = pv.view(bs, 256, -1)  # [bs, 256, 400]
 
-        # fl = fl.unsqueeze(0).permute(0,3,1,2)  # [1, 768, 64, 40]
-        # pl = self.l_proj(fl)  # [1, 256, 64, 40]
-        # pl = pl.squeeze().permute(1, 0, 2).view(bs, 256, -1)  # [64, 256, 40]
+        # fl = fl.unsqueeze(0).permute(0,3,1,2)  # [1, 768, bs, 40]
+        # pl = self.l_proj(fl)  # [1, 256, bs, 40]
+        # pl = pl.squeeze().permute(1, 0, 2).view(bs, 256, -1)  # [bs, 256, 40]
 
         pr = self.pr.weight # [1, 256]
-        pr = pr.expand(bs,-1).unsqueeze(2)  # [64, 256, 1]
+        pr = pr.expand(bs,-1).unsqueeze(2)  # [bs, 256, 1]
 
         x0 = torch.cat((pv, pl), dim=2)
-        x0 = torch.cat((x0, pr), dim=2)  # [64, 256, 441]
+        x0 = torch.cat((x0, pr), dim=2)  # [bs, 256, 441]
         
-        pos = self.pos(x0).to(x0.dtype)  # [64, 441, 256]
-        mask = torch.zeros([bs, 441]).cuda()
-        mask = mask.bool()  # [64, 441]
+        pos = self.pos(x0).to(x0.dtype)  # [bs, 441, 256]
+        mask = torch.zeros([bs, x0.shape[2]]).cuda()
+        mask = mask.bool()  # [bs, 441]
         
-        out = self.transformer(x0, mask, pos)  # [441,64,256]
+        out = self.transformer(x0, mask, pos)  # [441, bs, 256]
         
         return out[-1]
 
