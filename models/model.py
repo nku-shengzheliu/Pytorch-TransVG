@@ -73,6 +73,7 @@ class TransVG(nn.Module):
         self.visumodel = load_weights(self.visumodel, './saved_models/detr-r50-e632da11.pth')
         
         ## Text model
+        #print('Text model')
         self.textmodel = BertModel.from_pretrained(bert_model)
 
         ## Visual-linguistic Fusion model
@@ -92,14 +93,14 @@ class TransVG(nn.Module):
     def forward(self, image, mask, word_id, word_mask):
         ## Visual Module
         batch_size = image.size(0)
-        fv = self.visumodel(image, mask)
+        fv = self.visumodel(image, mask)  # [bs, 256, 20, 20]
 
         ## Language Module
         all_encoder_layers, _ = self.textmodel(word_id, \
             token_type_ids=None, attention_mask=word_mask)
         ## Sentence feature TODO:这里取了最后四层，TransVG没说
         fl = (all_encoder_layers[-1] + all_encoder_layers[-2]\
-             + all_encoder_layers[-3] + all_encoder_layers[-4])/4
+             + all_encoder_layers[-3] + all_encoder_layers[-4])/4  # [bs, 40, 768]
         if not self.tunebert:
             ## fix bert during training
             # raw_flang = raw_flang.detach()
