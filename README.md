@@ -16,6 +16,19 @@ If you have any questions about the code please feel free to ask~
   * My model is still in training. My reproduced model performance table will be updated as soon as I finish the training.
 * 2021.6.3
   * The previously trained model was very slow to converge due to the wrong setting of `image mask` in transformer encoder. I fixed this bug and re-trained now.
+* 2021.6.6 Reproduced model performance:
+
+<table>
+    <tr>
+        <th>Dataset</th><th>Acc@0.5</th><th>URL</th>
+    </tr>
+    <tr>
+        <td rowspan="3">ReferItGame</td><td>val:68.07</td><td><a href="https://drive.google.com/file/d/1si1h5RPRh4WMgAvhFOtz2APKz9eJtMpY/view?usp=sharing">Google drive</a></td>
+    </tr>
+    <tr>
+        <td>test:66.97</td><td><a href="https://pan.baidu.com/s/1QNAA6xAPlEaULrg7OqiwQQ">Baidu drive</a>[tbuq]</td>
+    </tr>
+</table>
 
 ## Prerequisites
 
