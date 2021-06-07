@@ -67,7 +67,7 @@ python train.py --data_root XXX --dataset {dataset_name} --gpu {gpu_id}
 Evaluate the model using the following commands:
 
 ```
- python train.py --data_root XXX --dataset {dataset_name} --gpu {gpu_id}  --test
+ python train.py  --test --resume {saved_model_path} --data_root XXX --dataset {dataset_name} --gpu {gpu_id}
 ```
 
 ## Acknowledgement
